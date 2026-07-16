@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const jobController = require("../controllers/jobController");
+const jobController = require("../controllers/jobsController");
 
 
 router.post("/create", jobController.createJob);
