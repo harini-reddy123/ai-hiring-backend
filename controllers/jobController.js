@@ -1,72 +1,111 @@
 const db = require("../config/db");
-exports.createJob = (req, res) => {
 
-    const {
-        job_title,
-        company_name,
-        location,
-        salary,
-        experience,
-        required_skills,
-        job_description,
-        posted_by
-    } = req.body;
+// Create Job (HR)
+exports.createJob = async (req, res) => {
 
-    const sql = `
-        INSERT INTO jobs
-        (job_title, company_name, location, salary, experience, required_skills, job_description, posted_by)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    const { title, description, skills, location, salary, created_by } = req.body;
 
-    db.query(
-        sql,
-        [
-            job_title,
-            company_name,
-            location,
-            salary,
-            experience,
-            required_skills,
-            job_description,
-            posted_by
-        ],
-        (err, result) => {
+    try {
+
+        const sql = `
+        INSERT INTO jobs 
+        (title, description, skills, location, salary, created_by)
+        VALUES (?, ?, ?, ?, ?, ?)
+        `;
+
+        db.query(
+            sql,
+            [title, description, skills, location, salary, created_by],
+            (err, result) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        message: "Job creation failed",
+                        error: err
+                    });
+                }
+
+                res.status(201).json({
+                    message: "Job created successfully",
+                    jobId: result.insertId
+                });
+
+            }
+        );
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: "Server error",
+            error
+        });
+
+    }
+};
+
+
+// Get All Jobs
+exports.getJobs = async (req, res) => {
+
+    try {
+
+        const sql = "SELECT * FROM jobs ORDER BY created_at DESC";
+
+        db.query(sql, (err, result) => {
 
             if (err) {
                 return res.status(500).json({
-                    success: false,
-                    message: err.message
+                    message: "Cannot fetch jobs",
+                    error: err
                 });
             }
 
-            res.status(201).json({
-                success: true,
-                message: "Job Created Successfully"
-            });
+            res.json(result);
 
-        }
-    );
-
-};
-
-exports.getAllJobs = (req, res) => {
-
-    const sql = "SELECT * FROM jobs ORDER BY created_at DESC";
-
-    db.query(sql, (err, result) => {
-
-        if (err) {
-            return res.status(500).json({
-                success: false,
-                message: err.message
-            });
-        }
-
-        res.json({
-            success: true,
-            jobs: result
         });
 
-    });
 
+    } catch (error) {
+
+        res.status(500).json({
+            message: "Server error",
+            error
+        });
+
+    }
+};
+
+
+// Get Single Job
+exports.getJobById = async (req, res) => {
+
+    const { id } = req.params;
+
+    try {
+
+        const sql = "SELECT * FROM jobs WHERE id=?";
+
+        db.query(sql, [id], (err, result)=>{
+
+            if(err){
+                return res.status(500).json({
+                    message:"Error fetching job",
+                    error:err
+                });
+            }
+
+
+            res.json(result[0]);
+
+        });
+
+
+    } catch(error){
+
+        res.status(500).json({
+            message:"Server error",
+            error
+        });
+
+    }
 };
