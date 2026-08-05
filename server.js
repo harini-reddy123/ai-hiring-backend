@@ -7,6 +7,8 @@ const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const dashboardRoutes = require('./routes/dashboard');
+const jobRoutes = require('./routes/jobRoutes');
 
 
 const app = express();
@@ -29,6 +31,8 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 
 app.use("/api/ai", aiRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/jobs', jobRoutes);
 
 
 // Test API
