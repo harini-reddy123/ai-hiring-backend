@@ -1,23 +1,23 @@
-require("dotenv").config();
-const mysql = require("mysql2");
+const { Sequelize } = require('sequelize');
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
-
-db.connect((err) => {
-  if (err) {
-    console.log("Database connection failed:", err);
-  } else {
-    console.log("TiDB Connected Successfully");
+const sequelize = new Sequelize(
+  'dashboard_db',
+  'root',
+  'Harini@12345',
+  {
+    host: 'localhost',
+    dialect: 'mysql',
+    logging: false
   }
-});
+);
 
-module.exports = db;
+const connectDB = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('MySQL Database Connected Successfully!');
+  } catch (error) {
+    console.error('Database connection failed:', error.message);
+  }
+};
+
+module.exports = { sequelize, connectDB };

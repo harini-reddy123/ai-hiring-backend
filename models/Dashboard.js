@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/db');
+const { sequelize } = require('../config/db dash'); 
 
 const DashboardStats = sequelize.define('DashboardStats', {
   id: {
@@ -20,7 +20,7 @@ const DashboardStats = sequelize.define('DashboardStats', {
     defaultValue: 0
   }
 }, {
-  timestamps: true // Creates createdAt and updatedAt columns automatically
+  timestamps: true
 });
 
 module.exports = DashboardStats;
